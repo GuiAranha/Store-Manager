@@ -68,4 +68,22 @@ describe('Testes de productsModel', () => {
       });
     });
   });
+  describe('Verifica se é possivel adicionar um produto', () => {
+    const product = [{ insertId: 1 }];
+
+    beforeEach(async () => await sinon.stub(conn, 'execute').resolves(product));
+
+    afterEach(async () => await conn.execute.restore());
+
+    it('Deve possuir chaves id e name', async () => {
+      const response = await productsModel.newProduct('newProductName');
+      expect(response).to.deep.equal({ id: 1, name: 'newProductName' });
+    });
+
+    it('Deve retornar um objeto', async () => {
+      const response = await productsModel.newProduct('newProductName');
+      expect(response).to.be.a('object');
+    });
+  });
+
 })

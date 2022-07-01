@@ -59,4 +59,27 @@ describe("Testes de productsController", () => {
       expect(res.status.calledWith(200)).to.be.equal(true);
     });
   });
+
+  describe('Verifica funcao newProduct', () => {
+    const product = [
+      {
+        id: 1,
+        name: 'newProduct',
+      },
+    ];
+
+    beforeEach(async () => {
+      await sinon.stub(productsService, 'newProduct').resolves(product);
+      req.body = { name: 'newProduct' };
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+    });
+
+    afterEach(async () => await productsService.newProduct.restore());
+
+    it('Verifica status quando sucesso', async () => {
+      await productsController.newProduct(req, res);
+      expect(res.status.calledWith(201)).to.be.equal(true);
+    });
+  });
 });
