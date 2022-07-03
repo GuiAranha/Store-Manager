@@ -22,7 +22,7 @@ describe("Testes de productsController", () => {
     ];
 
     beforeEach(async () => {
-      sinon.stub(productsService, "getProducts").resolves(products);
+      await sinon.stub(productsService, "getProducts").resolves(products);
       res.status = sinon.stub().returns(res);
       req.json = sinon.stub().returns();
     });
