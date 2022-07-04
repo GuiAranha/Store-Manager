@@ -41,6 +41,20 @@ const newSale = async (sale) => {
   };
 };
 
+const getSales = async () => {
+  const data = await salesModel.getSales();
+  if (data.length === 0) return { code: 404, message: 'Sale not found' };
+  return data;
+};
+
+const getSaleById = async (id) => {
+  const data = await salesModel.getSaleById(id);
+  if (data.length === 0) return { code: 404, message: 'Sale not found' };
+  return data;
+};
+
 module.exports = {
   newSale,
+  getSales,
+  getSaleById,
 };
