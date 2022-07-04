@@ -1,6 +1,7 @@
 const { expect } = require("chai");
 const sinon = require("sinon");
 const salesServices = require("../../services/salesService");
+const salesModels = require("../../models/salesModel");
 
 describe('Testes de productsService', () => {
   describe('Verifica funcao newSale', () => {
@@ -47,6 +48,70 @@ describe('Testes de productsService', () => {
         const error = { code: 400, message: '"productId" is required'}
         expect(response).to.deep.equal(error);
       });
+    });
+  });
+
+  describe('Verifica funcao getSales', () => {
+    const sale = [
+      {
+        saleId: 1,
+        date: '2022-07-04T15:56:30.000Z',
+        productId: 1,
+        quantity: 1,
+      },
+    ];
+
+    beforeEach(async () => await sinon.stub(salesModels, 'getSales').resolves(sale));
+
+    afterEach(async () => await salesModels.getSales.restore());
+
+    it('Deve retornar um array', async () => {
+      const response = await salesServices.getSales();
+      expect(response).to.be.an('array');
+    });
+    it('Deve retornar um array com os itens informados', async () => {
+      const response = await salesServices.getSales();
+      expect(response).to.deep.equal([
+        {
+          saleId: 1,
+          date: '2022-07-04T15:56:30.000Z',
+          productId: 1,
+          quantity: 1,
+        },
+      ]);
+    });
+  });
+
+  describe('Verifica funcao getSaleById', () => {
+    const sale = [
+      {
+        saleId: 1,
+        date: '2022-07-04T15:56:30.000Z',
+        productId: 1,
+        quantity: 1,
+      },
+    ];
+
+    beforeEach(
+      async () => await sinon.stub(salesModels, 'getSaleById').resolves(sale)
+    );
+
+    afterEach(async () => await salesModels.getSaleById.restore());
+
+    it("Deve retornar um array", async () => {
+      const response = await salesServices.getSaleById(1);
+      expect(response).to.be.an('array');
+    });
+    it("Deve retornar um array com os itens informados", async () => {
+      const response = await salesServices.getSaleById(1);
+      expect(response).to.deep.equal([
+        {
+          saleId: 1,
+          date: '2022-07-04T15:56:30.000Z',
+          productId: 1,
+          quantity: 1,
+        },
+      ]);
     });
   });
 });
