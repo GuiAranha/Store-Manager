@@ -2,19 +2,20 @@ const productsModel = require('../models/productsModel');
 const salesModel = require('../models/salesModel');
 
 const validateSales = (sale) => {
-  const hasQuantity = sale.some((item) => !item.quantity);
-  const isQuantityPositive = sale.some((item) => item.quantity <= 0);
-  const hasID = sale.some((item) => !item.productId);
+  const hasQuantity = sale.every(({ quantity }) => quantity !== undefined);
+  const isQuantityPositive = sale.every(({ quantity }) => quantity >= 1);
+  const hasID = sale.every(({ productId }) => productId !== undefined);
   
-  if (isQuantityPositive) {
+  if (!hasQuantity) return { code: 400, message: '"quantity" is required' };
+
+  if (!isQuantityPositive) {
     return {
       code: 422,
       message: '"quantity" must be greater than or equal to 1',
     };
   }
   
-  if (hasQuantity) return { code: 400, message: '"quantity" is required' };
-  if (hasID) return { code: 400, message: '"productId" is required' };
+  if (!hasID) return { code: 400, message: '"productId" is required' };
   return { status: 'OK' };
 };
 

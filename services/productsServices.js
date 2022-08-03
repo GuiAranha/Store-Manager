@@ -1,3 +1,4 @@
+const joi = require('joi');
 const productsModel = require('../models/productsModel');
 
 const getProducts = async () => {
@@ -10,11 +11,17 @@ const getProductById = async (id) => {
   return data;
 };
 
+const productSchema = joi.object({
+  name: joi.string().required().min(5),
+});
+
 const newProduct = async (name) => {
   if (!name) return { code: 400, message: '"name" is required' };
 
-  if (name.length < 5) {
-    return { code: 422, message: '"name" length must be at least 5 characters long' };
+  const { error } = productSchema.validate({ name });
+
+  if (error) {
+    return { code: 422, message: error.message };
   }
 
   const data = await productsModel.newProduct(name);
@@ -24,16 +31,15 @@ const newProduct = async (name) => {
 const updateProduct = async (id, name) => {
   if (!name) return { code: 400, message: '"name" is required' };
 
-  if (name.length < 5) {
-    return {
-      code: 422,
-      message: '"name" length must be at least 5 characters long',
-    };
+  const { error } = productSchema.validate({ name });
+
+  if (error) {
+    return { code: 422, message: error.message };
   }
 
-  const product = await productsModel.getProductById(id);
+  const data = await productsModel.getProductById(id);
 
-  if (product.length === 0) {
+  if (data.length === 0) {
     return {
       code: 404,
       message: 'Product not found',

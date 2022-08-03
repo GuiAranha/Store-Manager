@@ -82,4 +82,27 @@ describe("Testes de productsController", () => {
       expect(res.status.calledWith(201)).to.be.equal(true);
     });
   });
+
+  describe("Verifica funcao updateProduct", () => {
+    const product = [
+      {
+        id: 1,
+        name: "updatedProduct",
+      },
+    ];
+
+    beforeEach(async () => {
+      await sinon.stub(productsService, "updateProduct").resolves(product);
+      req.body = { name: "updatedProduct" };
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+    });
+
+    afterEach(async () => await productsService.updateProduct.restore());
+
+    it("Verifica status quando sucesso", async () => {
+      await productsController.updateProduct(req, res);
+      expect(res.status.calledWith(200)).to.be.equal(true);
+    });
+  });
 });

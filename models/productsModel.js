@@ -1,17 +1,20 @@
 const conn = require('./connection');
 
 const getProducts = async () => {
-  const [data] = await conn.execute('SELECT * FROM products');
+  const query = 'SELECT * FROM products';
+  const [data] = await conn.execute(query);
   return data;
 };
 
 const getProductById = async (id) => {
-  const [data] = await conn.execute('SELECT * FROM products WHERE id = ?', [id]);
+  const query = 'SELECT * FROM products WHERE id = ?';
+  const [data] = await conn.execute(query, [id]);
   return data;
 };
 
 const newProduct = async (name) => {
-  const [data] = await conn.execute('INSERT INTO products (name) VALUES (?)', [name]);
+  const query = 'INSERT INTO products (name) VALUES (?)';
+  const [data] = await conn.execute(query, [name]);
   const result = {
     id: data.insertId,
     name,
@@ -20,7 +23,8 @@ const newProduct = async (name) => {
 };
 
 const updateProduct = async (id, name) => {
-  const [data] = await conn.execute('UPDATE products SET name = ? WHERE id = ?', [name, id]);
+  const query = 'UPDATE products SET name = ? WHERE id = ?';
+  const [data] = await conn.execute(query, [name, id]);
   return data;
 };
 

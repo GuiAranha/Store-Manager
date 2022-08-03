@@ -3,7 +3,7 @@ const sinon = require("sinon");
 const salesServices = require("../../services/salesService");
 const salesModels = require("../../models/salesModel");
 
-describe('Testes de productsService', () => {
+describe('Testes de salesService', () => {
   describe('Verifica funcao newSale', () => {
     describe('Verifica erro ao nao passar "quantity"', () => {
       const saleProductId = [{ productId: 1 }];

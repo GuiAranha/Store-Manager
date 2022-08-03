@@ -108,4 +108,41 @@ describe('Testes de productsService', () => {
       });
     });
   });
+
+  describe("Verifica funcao updateProducts", () => {
+    describe("Insere produto com nome irregular", () => {
+      it("Nao pode estar vazio", async () => {
+        const { code, message } = await productsService.updateProduct("");
+        expect(code).to.be.equal(400);
+        expect(message).to.be.equal('"name" is required');
+      });
+
+      it("Deve ter no minimo 5 caracteres", async () => {
+        const { code, message } = await productsService.updateProduct(1, "test");
+        expect(code).to.be.equal(422);
+        expect(message).to.be.equal(
+          '"name" length must be at least 5 characters long'
+        );
+      });
+    });
+
+    describe("Verifica um produto cadastrado com sucesso", () => {
+      const product = {
+        id: 1,
+        name: "updatedProduct",
+      };
+
+      beforeEach(
+        async () =>
+          await sinon.stub(productsModel, "updateProduct").resolves(product)
+      );
+
+      afterEach(async () => await productsModel.updateProduct.restore());
+
+      it("Deve retornar corretamente o produto", async () => {
+        const response = await productsService.updateProduct(1);
+        expect(response).to.be.a("object");
+      });
+    });
+  });
 });
